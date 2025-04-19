@@ -4,20 +4,24 @@
   "type": "module",
   "scripts": {
     "start": "pnpm dev",
-    "dev": "parcel app/index.html",
-    "build": "parcel build app/index.html",
+    "dev": "parcel web/app/index.html",
+    "build": "parcel build web/app/index.html",
     "test": "elm-test",
-    "review": "elm-review"
+    "review": "elm-review",
+    "storybook": "parcel web/storybook/index.html --no-cache"
   },
   "devDependencies": {
+    "@parcel/config-default": "2.14.4",
     "@parcel/transformer-elm": "2.14.4",
     "@tailwindcss/postcss": "4.1.4",
+    "astro": "5.7.4",
     "elm": "0.19.1-5",
     "elm-format": "0.8.7",
     "elm-review": "2.13.2",
     "eslint": "9.24.0",
     "eslint-config-love": "119.0.0",
     "parcel": "2.14.4",
+    "parcel-transformer-elm-assets": "1.0.3",
     "postcss": "8.2.1",
     "prettier": "3.5.3",
     "tailwindcss": "4.1.4"
