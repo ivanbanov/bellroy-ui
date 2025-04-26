@@ -127,6 +127,14 @@ styleView item active index =
             )
         , onClick <| Pick index
         , attribute "role" "option"
+        , attribute "aria-selected"
+            (if active then
+                "true"
+
+             else
+                "false"
+            )
+        , attribute "aria-label" ("Product style " ++ String.fromInt (index + 1))
         ]
         []
 

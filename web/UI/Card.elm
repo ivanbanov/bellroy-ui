@@ -45,7 +45,7 @@ getLevelClass level =
 
 cardClasses : String
 cardClasses =
-    "bg-[#f6f6f6] p-2"
+    "bg-[#f6f6f6] p-3"
 
 
 view : List (Html msg) -> CardConfig -> Html msg

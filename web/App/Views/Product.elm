@@ -86,7 +86,7 @@ view (Product product) model =
                     [ class "text-gray-700 m-0" ]
                     [ a
                         [ href "#", class "outline-none focus:ring ring-offset-4" ]
-                        [ span [ class "text-gray-500" ] [ text (product.name ++ " - " ++ product.showCaseInfo) ] ]
+                        [ span [ class "text-gray-400" ] [ text (product.name ++ " - " ++ product.showCaseInfo) ] ]
                     ]
                 , div [ class "my-1" ]
                     [ text ("€" ++ String.fromFloat product.price) ]
@@ -98,7 +98,7 @@ view (Product product) model =
                         |> Html.map (ProductPickStyle product.styles)
                     ]
                 , p
-                    [ class "text-gray-500 text-[11px]" ]
+                    [ class "text-gray-400 text-[11px]" ]
                     [ text product.description ]
                 ]
             ]

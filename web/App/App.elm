@@ -47,13 +47,10 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ class "container p-4 mx-auto" ]
         [ h1
-            [ class "text-3xl font-bold mb-8 container px-4 py-8" ]
+            [ class "text-4xl font-bold mb-8 container py-8 font-light" ]
             [ text "Shop All Products" ]
-        , div
-            [ class "container p-4" ]
-            [ AppProductsList.view model.productsList
-                |> Html.map ProductsListMsg
-            ]
+        , AppProductsList.view model.productsList
+            |> Html.map ProductsListMsg
         ]

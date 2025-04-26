@@ -79,7 +79,7 @@ view model =
         RemoteData.Success products ->
             div []
                 [ div
-                    [ class "grid gap-1 grid-cols-[repeat(auto-fill,minmax(250px,1fr))]" ]
+                    [ class "grid gap-1 grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(250px,1fr))]" ]
                     (List.map
                         (\(Product product) ->
                             let
