@@ -1,5 +1,7 @@
 module App.Views.Product exposing
-    ( Msg(..)
+    ( Model
+    , Msg(..)
+    , init
     , update
     , view
     )
@@ -7,19 +9,31 @@ module App.Views.Product exposing
 import App.Data.Product exposing (Product(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import List.Extra
 import UI.Card as Card exposing (..)
 import UI.Image as Image
-import UI.StylePicker as StylePicker exposing (pickIndex)
+import UI.StylePicker as StylePicker exposing (Msg(..), pickIndex, withStyles)
 import UI.Tag as Tag
 
 
+type alias Model =
+    { activeIndex : Int }
+
+
+init : Model
+init =
+    { activeIndex = 0 }
+
+
 type Msg
-    = ProductPickStyle String StylePicker.Msg
+    = ProductPickStyle (List String) StylePicker.Msg
 
 
-update : StylePicker.Msg -> List a -> Int -> Int
-update =
-    pickIndex
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        ProductPickStyle styles styleMsg ->
+            { model | activeIndex = pickIndex styleMsg styles model.activeIndex }
 
 
 tagVariantToString : Tag.Variant -> String
@@ -38,22 +52,28 @@ tagVariantToString level =
             "Best Seller"
 
 
-view : Product -> Int -> Html Msg
-view (Product product) activeIndex =
+view : Product -> Model -> Html Msg
+view (Product product) model =
     Card.init
         |> withLevel Level0
         |> Card.view
-            [ div [ class "grid grid-rows-[auto_auto_1fr_auto] gap-2" ]
-                [ div [ class "aspect-square" ]
+            [ div [ class "grid grid-rows-[auto_auto_1fr_auto] text-xs" ]
+                [ div
+                    [ attribute "style" <| "--color: " ++ Maybe.withDefault "" (List.Extra.getAt (model.activeIndex - 1) product.styles)
+                    , class "flex aspect-square relative after:content-[''] after:absolute after:inset-0 after:bg-[var(--color)] after:opacity-75 after:mix-blend-color after:pointer-events-none"
+                    ]
                     [ Image.view
-                        [ class "w-full h-full object-center object-contain max-h-64", alt product.name ]
+                        [ class "object-center object-contain w-full"
+                        , alt product.name
+                        ]
                         product.imageUrl
                     ]
-                , div [ class "flex gap-2" ]
+                , div [ class "flex gap-2 mb-2" ]
                     (List.map
                         (\tag ->
                             Tag.init
                                 |> Tag.withVariant (Tag.stringToVariant tag)
+                                |> Tag.withSize Tag.Small
                                 |> Tag.view
                                     (tag
                                         |> Tag.stringToVariant
@@ -63,18 +83,22 @@ view (Product product) activeIndex =
                         product.tags
                     )
                 , h3
-                    [ class "text-sm text-[#333]" ]
-                    [ a [ href "#", class "outline-none focus:ring ring-offset-4" ] [ text product.name ] ]
-                , p
-                    [ class "text-gray-600 text-sm" ]
-                    [ text product.description ]
-                , div
-                    [ class "text-gray-400 text-sm" ]
+                    [ class "text-gray-700 m-0" ]
+                    [ a
+                        [ href "#", class "outline-none focus:ring ring-offset-4" ]
+                        [ span [ class "text-gray-500" ] [ text (product.name ++ " - " ++ product.showCaseInfo) ] ]
+                    ]
+                , div [ class "my-1" ]
                     [ text ("€" ++ String.fromFloat product.price) ]
-                , StylePicker.init
-                    |> StylePicker.withStyles product.styles
-                    |> StylePicker.withActiveIndex activeIndex
-                    |> StylePicker.view
-                    |> Html.map (ProductPickStyle product.id)
+                , div [ class "my-1" ]
+                    [ StylePicker.init
+                        |> StylePicker.withStyles product.styles
+                        |> StylePicker.withActiveIndex model.activeIndex
+                        |> StylePicker.view
+                        |> Html.map (ProductPickStyle product.styles)
+                    ]
+                , p
+                    [ class "text-gray-500 text-[11px]" ]
+                    [ text product.description ]
                 ]
             ]

@@ -6,7 +6,7 @@ module App.Views.ProductsList exposing
     , view
     )
 
-import App.Data.Product exposing (Product(..), ProductList, getProducts)
+import App.Data.Product exposing (Product(..), ProductId, ProductList, getProducts)
 import App.Views.Product as AppProduct exposing (Msg(..))
 import Dict exposing (Dict)
 import Html exposing (Html, div, text)
@@ -16,14 +16,14 @@ import RemoteData exposing (WebData)
 
 type alias Model =
     { products : WebData ProductList
-    , activeProductsStyle : Dict String Int
+    , productsState : Dict ProductId AppProduct.Model
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { products = RemoteData.NotAsked
-      , activeProductsStyle = Dict.empty
+    ( { products = RemoteData.Loading
+      , productsState = Dict.empty
       }
     , getProducts GotProducts
     )
@@ -31,39 +31,33 @@ init =
 
 type Msg
     = GotProducts (WebData ProductList)
-    | ProductMsg AppProduct.Msg
+    | ProductMsg ProductId AppProduct.Msg
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        ProductMsg productMsg ->
-            case productMsg of
-                ProductPickStyle productId pickMsg ->
-                    let
-                        currentIndex =
-                            Maybe.withDefault 0 <| Dict.get productId model.activeProductsStyle
-
-                        listOfStyles =
-                            RemoteData.withDefault [] model.products
-                                |> List.map (\(Product p) -> ( p.id, p.styles ))
-                                |> Dict.fromList
-                                |> Dict.get productId
-                                |> Maybe.withDefault []
-                    in
-                    { model
-                        | activeProductsStyle =
-                            Dict.insert productId
-                                (AppProduct.update pickMsg listOfStyles currentIndex)
-                                model.activeProductsStyle
-                    }
+        ProductMsg productId productMsg ->
+            let
+                updatedProductState =
+                    Dict.get productId model.productsState
+                        |> Maybe.map (AppProduct.update productMsg)
+                        |> Maybe.withDefault AppProduct.init
+            in
+            { model
+                | productsState = Dict.insert productId updatedProductState model.productsState
+            }
 
         GotProducts data ->
             { model
                 | products = data
-                , activeProductsStyle =
+                , productsState =
                     RemoteData.withDefault [] data
-                        |> List.foldl (\(Product product) dict -> Dict.insert product.id 0 dict) Dict.empty
+                        |> List.foldl
+                            (\(Product product) dict ->
+                                Dict.insert product.id AppProduct.init dict
+                            )
+                            Dict.empty
             }
 
 
@@ -90,11 +84,12 @@ view model =
                         (\(Product product) ->
                             let
                                 activeIndex =
-                                    Dict.get product.id model.activeProductsStyle
-                                        |> Maybe.withDefault 0
+                                    Dict.get product.id model.productsState
+                                        |> Maybe.withDefault AppProduct.init
+                                        |> .activeIndex
                             in
-                            AppProduct.view (Product product) activeIndex
-                                |> Html.map ProductMsg
+                            AppProduct.view (Product product) { activeIndex = activeIndex }
+                                |> Html.map (ProductMsg product.id)
                         )
                         products
                     )

@@ -81,14 +81,14 @@ getVariantClass variant =
             "bg-black text-white"
 
         BestSeller ->
-            "bg-white text-orange-400 border border-gray-200"
+            "bg-white text-orange-700 border border-gray-100"
 
 
 getSizeClass : Size -> String
 getSizeClass size =
     case size of
         Small ->
-            "text-xs"
+            "text-[10px]"
 
         Medium ->
             "text-sm"

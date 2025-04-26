@@ -1,6 +1,7 @@
 module App.Data.Product exposing
     ( Product(..)
     , ProductData
+    , ProductId
     , ProductList
     , getProducts
     , productDecoder
@@ -21,10 +22,15 @@ type alias ProductList =
     List Product
 
 
+type alias ProductId =
+    String
+
+
 type alias ProductData =
-    { id : String
+    { id : ProductId
     , name : String
     , description : String
+    , showCaseInfo : String
     , price : Float
     , imageUrl : String
     , styles : List String
@@ -38,6 +44,7 @@ productDecoder =
         |> required "id" string
         |> required "name" string
         |> required "description" string
+        |> required "showCaseInfo" string
         |> required "price" float
         |> required "imageUrl" string
         |> required "styles" (list string)

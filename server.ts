@@ -33,6 +33,7 @@ interface Product {
   id: string
   name: string
   description: string
+  showCaseInfo: string
   price: number
   imageUrl: string
   styles: string[]
@@ -44,7 +45,10 @@ let i = 0
 const generateProduct = (): Product => ({
   id: faker.string.uuid(),
   name: faker.commerce.productName(),
-  description: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
+  showCaseInfo: `${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()}`,
+  description: faker.word.words({
+    count: faker.number.int({ min: 3, max: 6 }),
+  }),
   price: +faker.commerce.price(),
   imageUrl: `https://bellroy-product-images.imgix.net/bellroy_dot_com_range_page_image/EUR/${images[i > images.length ? (i = 0) : i++]}/0?auto=format&amp;fit=max&amp;w=160`,
   styles: Array.from({ length: 5 }, () => faker.color.rgb()),
@@ -59,8 +63,11 @@ app.use((_req, res, next) => {
   next()
 })
 
-app.get('/products', (req: Request, res: Response) => {
-  res.json([...Array(10)].map(() => generateProduct()))
+app.get('/products', (_req: Request, res: Response) => {
+  const delay = Math.random() * 1000 + 250
+  setTimeout(() => {
+    res.json([...Array(10)].map(() => generateProduct()))
+  }, delay)
 })
 
 app.listen(port, () => {

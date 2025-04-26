@@ -21,10 +21,6 @@ onKeyDown msg =
     on "keydown" (Decode.map msg (Decode.field "key" Decode.string))
 
 
-
--- MODEL
-
-
 type alias Model =
     { activeIndex : Int
     , styles : List String
@@ -55,10 +51,6 @@ withActiveIndex index model =
     { model | activeIndex = index }
 
 
-
--- MSG
-
-
 type Msg
     = Pick Int
     | PickPrevious
@@ -78,15 +70,11 @@ keyToMsg key =
             Pick -1
 
 
-
--- UPDATE
-
-
 pickIndex : Msg -> List a -> Int -> Int
 pickIndex msg list currentIndex =
     let
         maxIndex =
-            List.length list - 1
+            List.length list
     in
     case msg of
         Pick index ->
@@ -114,18 +102,33 @@ pickIndex msg list currentIndex =
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Pick index ->
-            { model | activeIndex = pickIndex msg model.styles model.activeIndex }
-
-        PickPrevious ->
-            { model | activeIndex = pickIndex msg model.styles model.activeIndex }
-
-        PickNext ->
+        _ ->
             { model | activeIndex = pickIndex msg model.styles model.activeIndex }
 
 
+styleView : String -> Bool -> Int -> Html Msg
+styleView item active index =
+    span
+        [ class
+            ("cursor-pointer rounded-full w-4 h-4 "
+                ++ (if active then
+                        " ring-1 ring-gray-500 ring-offset-2"
 
--- VIEW
+                    else
+                        ""
+                   )
+            )
+        , style "background"
+            (if item == ":reset:" then
+                " linear-gradient(-45deg, transparent 45%, #000, transparent 55%) , radial-gradient(circle at center, #fff 60%, #777 10%)"
+
+             else
+                item
+            )
+        , onClick <| Pick index
+        , attribute "role" "option"
+        ]
+        []
 
 
 view : Model -> Html Msg
@@ -139,25 +142,9 @@ view model =
             , tabindex 0
             , onKeyDown keyToMsg
             , attribute "role" "listbox"
-            , class "p-2 rounded-full focus-visible:bg-gray-200 outline-none"
+            , class "p-2 rounded-full focus-visible:bg-[#fdfdfd] focus-visible:border focus-visible:border-[#f0f0f0] focus-visible:-m-[1px] outline-none"
             ]
             (List.indexedMap
-                (\i item ->
-                    span
-                        [ class
-                            ("cursor-pointer rounded-full w-4 h-4"
-                                ++ (if i == model.activeIndex then
-                                        " ring-1 ring-gray-500 ring-offset-2"
-
-                                    else
-                                        ""
-                                   )
-                            )
-                        , style "background" item
-                        , onClick <| Pick i
-                        , attribute "role" "option"
-                        ]
-                        []
-                )
-                model.styles
+                (\i item -> styleView item (i == model.activeIndex) i)
+                (":reset:" :: model.styles)
             )
