@@ -12,8 +12,9 @@
     "noImplicitReturns": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "types": ["@testing-library/jest-dom"]
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "./global.d.ts"],
   "exclude": ["**/node_modules", "**/dist"]
 }

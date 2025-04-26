@@ -1,0 +1,115 @@
+module UI.Tag exposing
+    ( Size(..)
+    , TagConfig
+    , Variant(..)
+    , init
+    , stringToVariant
+    , view
+    , withSize
+    , withVariant
+    )
+
+import Html exposing (..)
+import Html.Attributes exposing (class)
+
+
+type Variant
+    = Basic
+    | Discount
+    | Special
+    | BestSeller
+
+
+type Size
+    = Small
+    | Medium
+    | Large
+
+
+type alias TagConfig =
+    { variant : Variant
+    , size : Size
+    }
+
+
+init : TagConfig
+init =
+    { variant = Basic
+    , size = Small
+    }
+
+
+withVariant : Variant -> TagConfig -> TagConfig
+withVariant variant config =
+    { config | variant = variant }
+
+
+withSize : Size -> TagConfig -> TagConfig
+withSize size config =
+    { config | size = size }
+
+
+stringToVariant : String -> Variant
+stringToVariant string =
+    case String.toLower string of
+        "basic" ->
+            Basic
+
+        "discount" ->
+            Discount
+
+        "special" ->
+            Special
+
+        "bestseller" ->
+            BestSeller
+
+        _ ->
+            Basic
+
+
+getVariantClass : Variant -> String
+getVariantClass variant =
+    case variant of
+        Basic ->
+            "bg-gray-200 text-black"
+
+        Discount ->
+            "bg-orange-700 text-white"
+
+        Special ->
+            "bg-black text-white"
+
+        BestSeller ->
+            "bg-white text-orange-400 border border-gray-200"
+
+
+getSizeClass : Size -> String
+getSizeClass size =
+    case size of
+        Small ->
+            "text-xs"
+
+        Medium ->
+            "text-sm"
+
+        Large ->
+            "text-base"
+
+
+labelClasses : String
+labelClasses =
+    "px-2 py-1 rounded inline-flex"
+
+
+view : String -> TagConfig -> Html msg
+view text_ config =
+    span
+        [ class <|
+            String.join " "
+                [ labelClasses
+                , getVariantClass config.variant
+                , getSizeClass config.size
+                ]
+        ]
+        [ text text_ ]

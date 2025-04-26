@@ -1,3 +1,3 @@
 import { Elm } from './App.elm'
 
-Elm.App.init({ node: document.getElementById('app') })
+Elm.App.App.init({ node: document.getElementById('app') })

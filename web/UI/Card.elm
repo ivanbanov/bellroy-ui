@@ -1,20 +1,56 @@
-module UI.Card exposing (render)
+module UI.Card exposing
+    ( CardConfig
+    , Level(..)
+    , init
+    , view
+    , withLevel
+    )
 
 import Html exposing (..)
 import Html.Attributes exposing (class)
 
 
-render : Html msg
-render =
+type Level
+    = Level0
+    | Level1
+    | Level2
+
+
+type alias CardConfig =
+    { level : Level }
+
+
+init : CardConfig
+init =
+    { level = Level1 }
+
+
+withLevel : Level -> CardConfig -> CardConfig
+withLevel level config =
+    { config | level = level }
+
+
+getLevelClass : Level -> String
+getLevelClass level =
+    case level of
+        Level0 ->
+            ""
+
+        Level1 ->
+            "shadow-md"
+
+        Level2 ->
+            "shadow-xl"
+
+
+cardClasses : String
+cardClasses =
+    "bg-[#f6f6f6] p-4"
+
+
+view : List (Html msg) -> CardConfig -> Html msg
+view html config =
     div
-        [ class "bg-white rounded-lg shadow-md p-5 m-5 max-w-[300px]"
+        [ class (cardClasses ++ " " ++ getLevelClass config.level)
         ]
-        [ h2
-            [ class "mb-2.5 text-gray-800"
-            ]
-            [ text "Card Title" ]
-        , p
-            [ class "text-gray-600 leading-relaxed"
-            ]
-            [ text "This is a simple card component built with Elm using inline styles." ]
-        ]
+        html

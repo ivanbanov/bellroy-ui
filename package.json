@@ -4,26 +4,34 @@
   "type": "module",
   "scripts": {
     "start": "pnpm dev",
-    "dev": "parcel web/app/index.html",
-    "build": "parcel build web/app/index.html",
-    "test": "elm-test",
+    "backend": "node --experimental-strip-types server.ts",
+    "vite": "vite -c vite.config.ts",
+    "dev": "pnpm vite web/App",
+    "build": "pnpm vite build web/App",
+    "test": "vitest",
     "review": "elm-review",
-    "storybook": "parcel web/storybook/index.html --no-cache"
+    "storybook": "pnpm vite web/Storybook"
   },
   "devDependencies": {
-    "@parcel/config-default": "2.14.4",
-    "@parcel/transformer-elm": "2.14.4",
+    "@faker-js/faker": "9.7.0",
     "@tailwindcss/postcss": "4.1.4",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@types/express": "5.0.1",
     "astro": "5.7.4",
     "elm": "0.19.1-5",
     "elm-format": "0.8.7",
     "elm-review": "2.13.2",
     "eslint": "9.24.0",
     "eslint-config-love": "119.0.0",
+    "express": "5.1.0",
+    "jsdom": "26.1.0",
     "parcel": "2.14.4",
-    "parcel-transformer-elm-assets": "1.0.3",
     "postcss": "8.2.1",
     "prettier": "3.5.3",
-    "tailwindcss": "4.1.4"
+    "tailwindcss": "4.1.4",
+    "vite": "6.3.2",
+    "vite-plugin-elm": "3.0.1",
+    "vitest": "3.1.1"
   }
 }
