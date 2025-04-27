@@ -9,7 +9,7 @@ module App.Data.Product exposing
     )
 
 import Http
-import Json.Decode exposing (Decoder, float, list, maybe, string)
+import Json.Decode exposing (Decoder, float, list, string)
 import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (WebData)
 

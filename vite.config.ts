@@ -5,11 +5,7 @@ const logger = createLogger()
 const { warn } = logger
 
 logger.warn = (msg, options) => {
-  // there is a weird warning from the plugin even though HMR is working fine, so we can ignore it for now
-  if (/warning: Failed to resolve "(.*\.elm)?"/.test(msg)) {
-    return
-  }
-
+  if (msg.includes('vite-plugin-elm')) return
   warn(msg, options)
 }
 
@@ -19,9 +15,4 @@ export default defineConfig({
   },
   plugins: [elm()],
   customLogger: logger,
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./vitest-setup.ts'],
-  },
 })

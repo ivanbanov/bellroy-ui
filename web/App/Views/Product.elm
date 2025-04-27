@@ -12,7 +12,7 @@ import Html.Attributes exposing (..)
 import List.Extra
 import UI.Card as Card exposing (..)
 import UI.Image as Image
-import UI.StylePicker as StylePicker exposing (Msg(..), pickIndex, withStyles)
+import UI.StylePicker as StylePicker exposing (Msg(..), pickIndex)
 import UI.Tag as Tag
 
 

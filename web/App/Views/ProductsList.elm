@@ -70,10 +70,9 @@ view model =
         RemoteData.Loading ->
             text "Loading products..."
 
-        RemoteData.Failure error ->
+        RemoteData.Failure _ ->
             div []
                 [ text "Failed to load products."
-                , text (Debug.toString error)
                 ]
 
         RemoteData.Success products ->
