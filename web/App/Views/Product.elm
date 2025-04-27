@@ -57,10 +57,14 @@ view (Product product) model =
     Card.init
         |> withLevel Level0
         |> Card.view
-            [ div [ class "grid grid-rows-[auto_auto_1fr_auto] text-xs" ]
+            [ div
+                [ class "grid grid-rows-[auto_auto_1fr_auto] text-xs"
+                , attribute "data-testid" "product"
+                ]
                 [ div
                     [ attribute "style" <| "--color: " ++ Maybe.withDefault "" (List.Extra.getAt (model.activeIndex - 1) product.styles)
                     , class "flex aspect-square relative after:content-[''] after:absolute after:inset-0 after:bg-[var(--color)] after:opacity-75 after:mix-blend-color after:pointer-events-none"
+                    , attribute "data-testid" "product-img"
                     ]
                     [ Image.view
                         [ class "object-center object-contain w-full"

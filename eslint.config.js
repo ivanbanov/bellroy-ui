@@ -3,7 +3,7 @@ import love from 'eslint-config-love'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules']),
+  globalIgnores(['dist', 'node_modules', 'elm-stuff']),
   love,
   {
     files: ['**/*.js', '**/*.js', '**/*.ts'],

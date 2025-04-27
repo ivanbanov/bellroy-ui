@@ -6,7 +6,6 @@ module UI.StylePicker exposing
     , update
     , view
     , withActiveIndex
-    , withOnPick
     , withStyles
     )
 
@@ -24,21 +23,14 @@ onKeyDown msg =
 type alias Model =
     { activeIndex : Int
     , styles : List String
-    , onPick : Int -> Msg
     }
 
 
 init : Model
 init =
-    { onPick = \x -> Pick x
-    , styles = []
+    { styles = []
     , activeIndex = 0
     }
-
-
-withOnPick : (Int -> Msg) -> Model -> Model
-withOnPick onPick model =
-    { model | onPick = onPick }
 
 
 withStyles : List String -> Model -> Model
