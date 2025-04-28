@@ -1,6 +1,6 @@
 # Bellroy
 
-Elm project using Vite for the bundling and Express to mock the back-end.
+Elm project using Vite for the bundling and Express to mock the backend. The styles are done with Tailwind CSS.
 
 ## Try it out
 
