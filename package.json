@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "pnpm dev",
-    "backend": "node --experimental-strip-types server.ts",
+    "api": "node --experimental-strip-types api/index.ts",
     "vite": "vite -c vite.config.ts",
     "dev": "pnpm vite web/App",
     "build": "pnpm vite build web/App",

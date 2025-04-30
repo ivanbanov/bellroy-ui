@@ -16,10 +16,10 @@ git clone git@github.com:ivanbanov/bellroy.git
 pnpm install
 ```
 
-3. Run the backend mock server
+3. Run the api mock server
 
 ```
-pnpm backend
+pnpm api
 ```
 
 4. Run the dev server

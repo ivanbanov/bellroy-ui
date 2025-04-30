@@ -72,6 +72,6 @@ productsDecoder =
 getProducts : (WebData ProductList -> msg) -> Cmd msg
 getProducts msg =
     Http.get
-        { url = "http://localhost:3000/products"
+        { url = "https://bellroy-api.vercel.app/products"
         , expect = Http.expectJson (RemoteData.fromResult >> msg) productsDecoder
         }
