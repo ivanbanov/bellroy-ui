@@ -14,6 +14,10 @@ import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (WebData)
 
 
+
+-- Types
+
+
 type Product
     = Product ProductData
 
@@ -38,6 +42,10 @@ type alias ProductData =
     }
 
 
+
+-- Decoders
+
+
 productDecoder : Decoder Product
 productDecoder =
     Json.Decode.succeed ProductData
@@ -55,6 +63,10 @@ productDecoder =
 productsDecoder : Decoder (List Product)
 productsDecoder =
     Json.Decode.list productDecoder
+
+
+
+-- API
 
 
 getProducts : (WebData ProductList -> msg) -> Cmd msg

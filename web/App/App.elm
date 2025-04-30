@@ -16,8 +16,16 @@ main =
         }
 
 
+
+-- Types
+
+
 type Msg
     = ProductsListMsg AppProductsList.Msg
+
+
+
+-- Model
 
 
 type alias Model =
@@ -36,6 +44,10 @@ init _ =
     )
 
 
+
+-- Update
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -43,6 +55,10 @@ update msg model =
             ( { model | productsList = AppProductsList.update productListMsg model.productsList }
             , Cmd.none
             )
+
+
+
+-- View
 
 
 view : Model -> Html Msg

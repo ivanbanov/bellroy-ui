@@ -13,6 +13,10 @@ import Html exposing (..)
 import Html.Attributes exposing (class)
 
 
+
+-- Types
+
+
 type Variant
     = Basic
     | Discount
@@ -24,6 +28,10 @@ type Size
     = Small
     | Medium
     | Large
+
+
+
+-- Model
 
 
 type alias TagConfig =
@@ -39,6 +47,10 @@ init =
     }
 
 
+
+-- Builders
+
+
 withVariant : Variant -> TagConfig -> TagConfig
 withVariant variant config =
     { config | variant = variant }
@@ -47,6 +59,10 @@ withVariant variant config =
 withSize : Size -> TagConfig -> TagConfig
 withSize size config =
     { config | size = size }
+
+
+
+-- Utils
 
 
 stringToVariant : String -> Variant
@@ -100,6 +116,10 @@ getSizeClass size =
 labelClasses : String
 labelClasses =
     "px-2 py-1 rounded inline-flex"
+
+
+
+-- View
 
 
 view : String -> TagConfig -> Html msg

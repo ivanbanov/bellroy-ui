@@ -14,6 +14,19 @@ import Html.Attributes exposing (class)
 import RemoteData exposing (WebData)
 
 
+
+-- Types
+
+
+type Msg
+    = GotProducts (WebData ProductList)
+    | ProductMsg ProductId AppProduct.Msg
+
+
+
+-- Model
+
+
 type alias Model =
     { products : WebData ProductList
     , productsState : Dict ProductId AppProduct.Model
@@ -29,9 +42,8 @@ init =
     )
 
 
-type Msg
-    = GotProducts (WebData ProductList)
-    | ProductMsg ProductId AppProduct.Msg
+
+-- Update
 
 
 update : Msg -> Model -> Model
@@ -59,6 +71,10 @@ update msg model =
                             )
                             Dict.empty
             }
+
+
+
+-- View
 
 
 view : Model -> Html Msg

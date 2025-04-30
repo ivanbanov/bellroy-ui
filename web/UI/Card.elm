@@ -10,6 +10,10 @@ import Html exposing (..)
 import Html.Attributes exposing (class)
 
 
+
+-- Model
+
+
 type Level
     = Level0
     | Level1
@@ -25,9 +29,17 @@ init =
     { level = Level1 }
 
 
+
+-- Builders
+
+
 withLevel : Level -> CardConfig -> CardConfig
 withLevel level config =
     { config | level = level }
+
+
+
+-- Utils
 
 
 getLevelClass : Level -> String
@@ -46,6 +58,10 @@ getLevelClass level =
 cardClasses : String
 cardClasses =
     "bg-[#f6f6f6] p-3"
+
+
+
+-- View
 
 
 view : List (Html msg) -> CardConfig -> Html msg

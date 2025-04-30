@@ -15,9 +15,18 @@ import Html.Events exposing (on, onClick)
 import Json.Decode as Decode
 
 
-onKeyDown : (String -> msg) -> Attribute msg
-onKeyDown msg =
-    on "keydown" (Decode.map msg (Decode.field "key" Decode.string))
+
+-- Types
+
+
+type Msg
+    = Pick Int
+    | PickPrevious
+    | PickNext
+
+
+
+-- Model
 
 
 type alias Model =
@@ -33,6 +42,10 @@ init =
     }
 
 
+
+-- Builders
+
+
 withStyles : List String -> Model -> Model
 withStyles styles model =
     { model | styles = styles }
@@ -43,10 +56,13 @@ withActiveIndex index model =
     { model | activeIndex = index }
 
 
-type Msg
-    = Pick Int
-    | PickPrevious
-    | PickNext
+
+-- Utils
+
+
+onKeyDown : (String -> msg) -> Attribute msg
+onKeyDown msg =
+    on "keydown" (Decode.map msg (Decode.field "key" Decode.string))
 
 
 keyToMsg : String -> Msg
@@ -60,6 +76,10 @@ keyToMsg key =
 
         _ ->
             Pick -1
+
+
+
+-- Update
 
 
 pickIndex : Msg -> List a -> Int -> Int
@@ -96,6 +116,10 @@ update msg model =
     case msg of
         _ ->
             { model | activeIndex = pickIndex msg model.styles model.activeIndex }
+
+
+
+-- View
 
 
 styleView : String -> Bool -> Int -> Html Msg

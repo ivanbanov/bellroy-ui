@@ -16,6 +16,18 @@ import UI.StylePicker as StylePicker exposing (Msg(..), pickIndex)
 import UI.Tag as Tag
 
 
+
+-- Types
+
+
+type Msg
+    = ProductPickStyle (List String) StylePicker.Msg
+
+
+
+-- Model
+
+
 type alias Model =
     { activeIndex : Int }
 
@@ -25,8 +37,8 @@ init =
     { activeIndex = 0 }
 
 
-type Msg
-    = ProductPickStyle (List String) StylePicker.Msg
+
+-- Update
 
 
 update : Msg -> Model -> Model
@@ -34,6 +46,10 @@ update msg model =
     case msg of
         ProductPickStyle styles styleMsg ->
             { model | activeIndex = pickIndex styleMsg styles model.activeIndex }
+
+
+
+-- Utils
 
 
 tagVariantToString : Tag.Variant -> String
@@ -50,6 +66,10 @@ tagVariantToString level =
 
         Tag.BestSeller ->
             "Best Seller"
+
+
+
+-- View
 
 
 view : Product -> Model -> Html Msg
