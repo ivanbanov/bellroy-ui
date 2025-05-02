@@ -2,12 +2,13 @@ module App.Data.Product exposing
     ( Product(..)
     , ProductData
     , ProductId
-    , ProductList
+    , ProductsList
     , getProducts
     , productDecoder
     , productsDecoder
     )
 
+import Dict exposing (Dict)
 import Http
 import Json.Decode exposing (Decoder, float, list, string)
 import Json.Decode.Pipeline exposing (required)
@@ -22,8 +23,8 @@ type Product
     = Product ProductData
 
 
-type alias ProductList =
-    List Product
+type alias ProductsList =
+    Dict ProductId Product
 
 
 type alias ProductId =
@@ -60,16 +61,17 @@ productDecoder =
         |> Json.Decode.map Product
 
 
-productsDecoder : Decoder (List Product)
+productsDecoder : Decoder ProductsList
 productsDecoder =
     Json.Decode.list productDecoder
+        |> Json.Decode.map (List.map (\(Product data) -> ( data.id, Product data )) >> Dict.fromList)
 
 
 
 -- API
 
 
-getProducts : (WebData ProductList -> msg) -> Cmd msg
+getProducts : (WebData ProductsList -> msg) -> Cmd msg
 getProducts msg =
     Http.get
         { url = "https://bellroy-api.vercel.app/products"

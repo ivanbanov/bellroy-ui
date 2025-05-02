@@ -51,8 +51,8 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ProductsListMsg productListMsg ->
-            ( { model | productsList = AppProductsList.update productListMsg model.productsList }
+        ProductsListMsg productsListMsg ->
+            ( { model | productsList = AppProductsList.update productsListMsg model.productsList }
             , Cmd.none
             )
 

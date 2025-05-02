@@ -1,12 +1,13 @@
 module App.Views.ProductsList exposing
     ( Model
     , Msg(..)
+    , ProductsList
     , init
     , update
     , view
     )
 
-import App.Data.Product exposing (Product(..), ProductId, ProductList, getProducts)
+import App.Data.Product exposing (Product(..), ProductId, getProducts)
 import App.Views.Product as AppProduct exposing (Msg(..))
 import Dict exposing (Dict)
 import Html exposing (Html, div, text)
@@ -18,8 +19,12 @@ import RemoteData exposing (WebData)
 -- Types
 
 
+type alias ProductsList =
+    Dict ProductId { product : Product, state : AppProduct.Model }
+
+
 type Msg
-    = GotProducts (WebData ProductList)
+    = GotProducts (WebData App.Data.Product.ProductsList)
     | ProductMsg ProductId AppProduct.Msg
 
 
@@ -28,16 +33,13 @@ type Msg
 
 
 type alias Model =
-    { products : WebData ProductList
-    , productsState : Dict ProductId AppProduct.Model
+    { products : WebData (Dict ProductId { product : Product, state : AppProduct.Model })
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { products = RemoteData.Loading
-      , productsState = Dict.empty
-      }
+    ( { products = RemoteData.Loading }
     , getProducts GotProducts
     )
 
@@ -50,26 +52,38 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         ProductMsg productId productMsg ->
-            let
-                updatedProductState =
-                    Dict.get productId model.productsState
-                        |> Maybe.map (AppProduct.update productMsg)
-                        |> Maybe.withDefault AppProduct.init
-            in
             { model
-                | productsState = Dict.insert productId updatedProductState model.productsState
+                | products =
+                    RemoteData.map
+                        (\products ->
+                            case Dict.get productId products of
+                                Just product ->
+                                    Dict.insert productId
+                                        { product = product.product
+                                        , state = AppProduct.update productMsg product.state
+                                        }
+                                        products
+
+                                Nothing ->
+                                    products
+                        )
+                        model.products
             }
 
         GotProducts data ->
             { model
-                | products = data
-                , productsState =
-                    RemoteData.withDefault [] data
-                        |> List.foldl
-                            (\(Product product) dict ->
-                                Dict.insert product.id AppProduct.init dict
-                            )
-                            Dict.empty
+                | products =
+                    RemoteData.map
+                        (\products ->
+                            Dict.map
+                                (\_ product ->
+                                    { product = product
+                                    , state = AppProduct.init
+                                    }
+                                )
+                                products
+                        )
+                        data
             }
 
 
@@ -95,17 +109,14 @@ view model =
             div []
                 [ div
                     [ class "grid gap-1 grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(250px,1fr))]" ]
-                    (List.map
-                        (\(Product product) ->
-                            let
-                                activeIndex =
-                                    Dict.get product.id model.productsState
-                                        |> Maybe.withDefault AppProduct.init
-                                        |> .activeIndex
-                            in
-                            AppProduct.view (Product product) { activeIndex = activeIndex }
-                                |> Html.map (ProductMsg product.id)
+                    (Dict.toList
+                        (Dict.map
+                            (\id { product, state } ->
+                                AppProduct.view product state
+                                    |> Html.map (ProductMsg id)
+                            )
+                            products
                         )
-                        products
+                        |> List.map Tuple.second
                     )
                 ]
